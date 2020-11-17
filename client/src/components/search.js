@@ -1,66 +1,46 @@
-import React from 'react';
-import { MDBDataTable } from 'mdbreact';
+import React,{Component} from 'react';
+import axios from 'axios';
+import Home from './home';
 
-const DatatablePage = () => {
-  const data = {
-    columns: [
-      {
-        label: 'Name',
-        field: 'name',
-        sort: 'asc',
-        width: 150
-      },
-      {
-        label: 'Position',
-        field: 'position',
-        sort: 'asc',
-        width: 270
-      },
-      {
-        label: 'Office',
-        field: 'office',
-        sort: 'asc',
-        width: 200
-      },
-      {
-        label: 'Age',
-        field: 'age',
-        sort: 'asc',
-        width: 100
-      },
-      {
-        label: 'Start date',
-        field: 'date',
-        sort: 'asc',
-        width: 150
-      },
-      {
-        label: 'Salary',
-        field: 'salary',
-        sort: 'asc',
-        width: 100
-      }
-    ],
-    rows: [
-      {
-        name: 'Tiger Nixon',
-        position: 'System Architect',
-        office: 'Edinburgh',
-        age: '61',
-        date: '2011/04/25',
-        salary: '$320'
-      }
-    ]
-  };
+export default class Search extends Component{
+  constructor() {
+    super();
+    this.state={
+        searchId: null,
+        searchName: null,
+        searchType: null,
+        searchData: null
+    }
+  }
 
-  return (
-    <MDBDataTable
-      striped
-      bordered
-      small
-      data={data}
-    />
-  );
+  handleSubmit = (e) => {
+    console.log(this.state)
+    axios.post("/search",this.state)
+    .then((response) => {
+      alert("uploaded");
+    }).catch((error) => {
+  });
+  }
+
+  handleChange=(e)=>{
+    this.setState({
+      [e.target.id]: e.target.value
+    });
+  }
+
+  render(){
+    return(
+    <form onSubmit={this.handleSubmit}>
+      <div  align="right">
+        <input type="text" name="Search" id="searchId" value={this.state.searchId} onChange={this.handleChange} placeholder="ID"></input> &nbsp;&nbsp;
+        <input type="text" name="Search" id="searchName" value={this.state.searchName} onChange={this.handleChange} placeholder="Name"></input> &nbsp;&nbsp;
+        <input type="text" name="Search" id="searchType" value={this.state.searchType} onChange={this.handleChange} placeholder="Type"></input> &nbsp;&nbsp;
+        <input type="text" name="Search" id="searchData" value={this.state.searchData} onChange={this.handleChange} placeholder="Data"></input> &nbsp;&nbsp;
+        <input type="submit" className="btn btn-primary" value="ค้นหา"/>
+      </div>
+      <p></p>
+      <Home></Home>
+    </form>
+    )
+  }
 }
-
-export default DatatablePage;

@@ -14,7 +14,7 @@ const con = mysql.createConnection({
     database : 'project_produce'
   });
 con.connect(function(err) {
-    if (err) console.log(err);
+    if (err) return console.log(err);
     console.log("MySQL Connected");
 });
 
@@ -141,7 +141,7 @@ router.post('/addProduce', async (req, res) => {
 });
 
 router.get('/showProduce', async (req, res) => {
-    sql = "SELECT produce_id, produce_name, produce_type, produce_data, produce_img FROM tb_produce"
+    sql = "SELECT produce_id, produce_name, produce_type, produce_data FROM tb_produce"
     con.query(sql, function (err, result) {
         if (err) return console.log(err);
         var strResult = JSON.parse(JSON.stringify(result))
@@ -152,7 +152,55 @@ router.get('/showProduce', async (req, res) => {
     })
 });
 
-router.get('/session', async (req, res) => {
+router.post('/search', async (req, res) => {
+    console.log(req.body)
+    if (req.body.searchId != null && req.body.searchName != null && req.body.searchType != null && req.body.searchData != null) {
+        sql = "SELECT produce_id,produce_name, produce_type, produce_data FROM tb_produce WHERE produce_id LIKE '%"+ req.body.searchId +"%' AND produce_name LIKE '%"+ req.body.searchName +"%' AND produce_type LIKE '%"+ req.body.searchType +"%' AND produce_data LIKE '%"+ req.body.searchData +"%'"
+    }
+    else if (req.body.searchId != null && req.body.searchName != null && req.body.searchType) {
+        sql = "SELECT produce_id FROM tb_produce WHERE produce_id LIKE '%"+ req.body.searchId +"%'"
+    }
+    // sql = "SELECT produce_id FROM tb_produce WHERE produce_id LIKE '%"+ req.body.searchId +"%'"
+    con.query(sql, function (err, result) {
+        console.log(result)
+        // if (err) return console.log(err);
+        // var strUser = JSON.stringify(result)
+        // if (strUser != "[]") {
+        //     sql = "SELECT level FROM user WHERE username = '"+ req.body.checkUser +"' AND password = '"+ req.body.checkPass +"'"
+        //     con.query(sql, function (err, result) {
+        //         if (err) return console.log(err);
+        //         var strResult = JSON.stringify(result)
+        //         var strResult2 = JSON.parse(JSON.stringify(result))
+        //         // console.log(result)
+        //         // console.log(typeof(strResult),strResult)
+        //         if (strResult == "[]") {
+        //             console.log("รหัสผ่านผิด");
+        //             var checked ={
+        //                 checkedUser: true,
+        //                 checkedPass: false
+        //             };
+        //             console.log(checked);
+        //             res.json(checked);
+        //         } else {
+        //             console.log('รหัสผ่านถูก');
+        //             console.log(strResult2)
+        //             var checked ={
+        //                 checkedUser: true,
+        //                 checkedPass: true,
+        //                 checkedLevel: strResult2
+        //             };
+        //             console.log(checked);
+        //             res.json(checked);
+        //         }
+        //     })
+        // } else {
+        //     var checked = {
+        //         checkedUser: false
+        //     };
+        //     console.log('ชื่อผู้ใช้ผิด');
+        //     res.json(checked);
+        // }
+    })
 });
 
 module.exports = router;
