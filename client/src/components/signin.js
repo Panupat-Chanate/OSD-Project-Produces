@@ -24,7 +24,7 @@ export default function Signin() {
           if (checkedLevel === 1) {
             browserHistory.push("/addproduce");
           } else {
-            browserHistory.push("/home");
+            browserHistory.push("/search");
           }
         } else {
           alert("รหัสผ่านไม่ถูกต้อง");

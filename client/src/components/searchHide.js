@@ -24,13 +24,29 @@ export default class Search extends Component{
       })
       const numbers = response.data
       console.log(numbers)
+      // console.log(numbers.length)
       var joined = this.state.arrayData.concat(response.data);
       this.setState({ arrayData: joined })
+      // this.setState(state => {
+      //       state.arrayData.push(response.data);
+      //       console.log(response)
+      //     })
+      // for (let i = 0; i < numbers.length; i++) {
+      //   // console.log(response.data[i])
+      //   console.log(numbers.length)
+      //   this.setState(state => {
+      //     state.arrayData.push(response.data[i]);
+      //     console.log(response.data[i])
+      //   })
+      //   // console.log(this.state.arrayData)
+      // }
+      // console.log(this.state.arrayData)
       this.setState({
         searchId: '',
         searchName: '',
         searchType: '',
-        searchData: ''
+        searchData: '',
+        // [e.target.id]:"",
       })
     }).catch((error) => {
       console.log(error)
