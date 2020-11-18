@@ -3,14 +3,13 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import Home from './home';
 
-export default function AddProduce() {
-    const { register, handleSubmit, setValue, errors, watch } = useForm({
-      // resolver: yupResolver(schema)
-    });
+export default function AddProduces() {
+    const { register, handleSubmit, setValue, errors } = useForm();
     const [file, setFile] = useState('');
+    const [Picture, setPicture] = useState('');
 
     const onSubmit = data => {
-      console.log(data)
+      console.log(Picture)
       const fd = new FormData();
       fd.append("Image", file);
       fd.append("ProduceId", data.ProduceId);
@@ -30,17 +29,20 @@ export default function AddProduce() {
       setValue("ProduceId", null)
       setValue("ProduceName", null)
       setValue("ProduceType", null)
+      setValue("ProduceData", null)
       setValue("picture", null)
     };
 
-    const handleSelect = (e) => {
+    const handlePicture = (e) => {
+      setPicture(e.target.files[0]);
+    }
+    const handleFile = (e) => {
       setFile(e.target.files[0]);
     }
-
   return (
     <div>
     <form onSubmit={handleSubmit(onSubmit)} align = "center">
-      <input type="file"  name="picture" id="file" ref={register({required: "อัพโหลดรูปโปรไฟล์"})} onChange={handleSelect} />
+      <input type="file" name="picture" id="picture" ref={register({required: "อัพโหลดรูปโปรไฟล์"})} onChange={handlePicture} />
       <p></p>
       <span >{errors.picture?.message}</span>
       <p></p>
@@ -77,9 +79,14 @@ export default function AddProduce() {
       <p></p>
       <span >{errors.ProduceData?.message}</span>
       <p></p>
+      <input type="file" name="file" id="file" ref={register} onChange={handleFile} />
+      <p></p>
+      {/* <input type="file" name="file" id="file" ref={register} onChange={handleSelect} />
+      <p></p> */}
       <input type="submit" className="btn btn-primary" value="เพิ่มข้อมูลผลิตภัณฑ์"/>
     </form>
-    <Home></Home>
+    <p></p>
+    {/* <Home></Home> */}
     </div>
   );
 }

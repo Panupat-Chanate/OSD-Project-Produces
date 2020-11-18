@@ -16,15 +16,14 @@ export default function Signin() {
     .then((response) => {
       var checkedUser = response.data.checkedUser
       var checkedPass = response.data.checkedPass
-      
-      
+
       if (checkedUser === true) {
         if (checkedPass === true) {
           var checkedLevel = response.data.checkedLevel[0].level
           if (checkedLevel === 1) {
-            browserHistory.push("/addproduce");
+            browserHistory.push("/home");
           } else {
-            browserHistory.push("/search");
+            browserHistory.push("/userhome");
           }
         } else {
           alert("รหัสผ่านไม่ถูกต้อง");

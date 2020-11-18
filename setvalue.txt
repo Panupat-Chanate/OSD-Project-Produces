@@ -1,0 +1,7 @@
+ค่าที่ set value ตอนนี้อยู่ กับ editAll
+value = editAll
+
+search set origin = value
+before set value = edit
+after set value = origin
+

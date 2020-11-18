@@ -5,33 +5,23 @@ const path = require('path');
 const mysql = require('mysql')
 var session = require('express-session')
 
-// importing files
 const routes = require('./routes');
 
-// Define Global Variables
 const app = express();
 const log = console.log;
-const PORT = process.env.PORT || 8080; // Step 1
+const PORT = process.env.PORT || 8080;
 
 app.use(session({ 
-    secret: 'keyboard cat', 
+    secret: 'secret', 
     resave: false, 
     saveUninitialized: true
    })
 )
 
-// Step 2
-// mongoose.connect( process.env.MONGODB_URI || 'mongodb+srv://panu_backend:15515511@clusterdb.1wuju.mongodb.net/TutorialDB?retryWrites=true&w=majority', {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
-
-// Configuration
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', routes);
 
-// Step 3
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static( 'client/build' ));
 
@@ -41,5 +31,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () => {
-    log(`Server is starting at PORT: ${PORT}`);
+    log('Server is starting at PORT: ${PORT}');
 });

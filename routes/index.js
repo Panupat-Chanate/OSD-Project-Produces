@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const mysql = require('mysql');
+var session = require('express-session')
 
 const con = mysql.createConnection({
     host: 'localhost',
@@ -90,8 +91,13 @@ router.post('/checksignin', async (req, res) => {
                         checkedPass: true,
                         checkedLevel: strResult2
                     };
+                    req.session.logedin = true;
+                    req.session.username = req.body.checkUser;
+                    req.session.level = strResult2;
+                    console.log(req.session.logedin , req.session.username);
                     console.log(checked);
                     res.json(checked);
+                    // res.redirect('/search')
                 }
             })
         } else {
@@ -154,7 +160,7 @@ router.get('/showProduce', async (req, res) => {
 
 router.post('/search', async (req, res) => {
     console.log(req.body)
-    let sql = "SELECT produce_id,produce_name, produce_type, produce_data, produce_img FROM tb_produce "
+    let sql = "SELECT * FROM tb_produce "
     if (req.body.searchId != null && req.body.searchName != null && req.body.searchType != null && req.body.searchData != null) {
         console.log("1")
        sql+="WHERE produce_id LIKE '%"+ req.body.searchId +"%' AND produce_name LIKE '%"+ req.body.searchName +"%' AND produce_type LIKE '%"+ req.body.searchType +"%' AND produce_data LIKE '%"+ req.body.searchData +"%'"
@@ -234,7 +240,7 @@ router.post('/search', async (req, res) => {
 
 router.post('/deleteproduce', async (req, res) => {
     console.log(req.body.delId)
-    sql = "DELETE FROM tb_produce WHERE produce_id = '"+ req.body.delId +"'"
+    sql = "DELETE FROM tb_produce WHERE _id = '"+ req.body.delId +"'"
     con.query(sql, function (err, result) {
         if (err) return console.log(err);
         res.json(result);
@@ -243,11 +249,36 @@ router.post('/deleteproduce', async (req, res) => {
 
 router.post('/editproduce', async (req, res) => {
     console.log(req.body)
-    // sql = "UPDATE tb_produce SET produce_id = '"+ req.body.editId +"', produce_name = '"+ req.body.editName +"', produce_type = '"+ req.body.editType +"', produce_data = '"+ req.body.editData +"' WHERE produce_id = '"+ req.body.delId +"'"
-    // con.query(sql, function (err, result) {
-    //     if (err) return console.log(err);
-    //     res.json(result);
-    // })
+    sql = "UPDATE tb_produce SET produce_id = '"+ req.body.editId +"', produce_name = '"+ req.body.editName +"', produce_type = '"+ req.body.editType +"', produce_data = '"+ req.body.editData +"' WHERE _id = '"+ req.body.edit_id +"'"
+    con.query(sql, function (err, result) {
+        if (err) return console.log(err);
+        res.json(result);
+    })
+})
+
+router.get('/checkSession', async (req, res) => {
+    if (req.session.logedin) {
+        console.log(req.session.logedin)
+        res.json(req.session.logedin);
+    } else {
+        console.log(false)
+        res.json(false);
+    }
+})
+
+router.get('/logout', async (req, res) => {
+    if (req.session.logedin) {
+        req.session.logedin = false;
+        req.session.username = '';
+        res.json(req.session.logedin);
+    } else {}
+})
+
+router.get('/getUser', async (req, res) => {
+    if (req.session.level) {
+        console.log(req.session.level)
+        res.json(req.session.level);
+    } else {}
 })
 
 module.exports = router;

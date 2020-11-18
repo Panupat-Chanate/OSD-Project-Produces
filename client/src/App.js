@@ -19,6 +19,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import Main from './Main';
 import { browserHistory } from 'react-router';
+import axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -85,15 +86,48 @@ export default function PersistentDrawerLeft() {
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    axios.get('/checkSession', {withCredentials: true})
+    .then(response => {
+      console.log(response.data)
+      if (response.data == true) {
+        setOpen(true);
+      } else {
+        setOpen(false);
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+    // setOpen(true);
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
   };
 
-  const handleClick = () => {
-    browserHistory.push("/");
+  const getUser = () => {
+    axios.get('/getUser', {withCredentials: true})
+    .then(response => {
+      console.log(response.data[0].level)
+      if (response.data[0].leve === 0) {
+        browserHistory.push("/userhome");
+      } else {
+        browserHistory.push("/user");
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  const getLogout = () => {
+    axios.get('/logout', {withCredentials: true})
+    .then(response => {
+      if (response.data) {
+      } else {
+        browserHistory.push("/");
+      }
+    }).catch(error => {
+      console.log(error);
+    });
   }
   return (
     <div className={classes.root}>
@@ -136,7 +170,7 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {['หน้าแรก'].map((text, index) => (
-            <ListItem button key={text} component="a" href="http://localhost:3000/home">
+            <ListItem button key={text} component="a" onClick={getUser}>
               <ListItemIcon>{<i class="fas fa-home"></i>}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -145,7 +179,7 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {['ออกจากระบบ'].map((text, index) => (
-            <ListItem button key={text} onClick={handleClick}>
+            <ListItem button key={text} onClick={getLogout}>
               <ListItemIcon>{<i class="fas fa-sign-out-alt"></i>}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
