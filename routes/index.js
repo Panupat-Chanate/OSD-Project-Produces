@@ -154,7 +154,7 @@ router.get('/showProduce', async (req, res) => {
 
 router.post('/search', async (req, res) => {
     console.log(req.body)
-    let sql = "SELECT produce_id,produce_name, produce_type, produce_data FROM tb_produce "
+    let sql = "SELECT produce_id,produce_name, produce_type, produce_data, produce_img FROM tb_produce "
     if (req.body.searchId != null && req.body.searchName != null && req.body.searchType != null && req.body.searchData != null) {
         console.log("1")
        sql+="WHERE produce_id LIKE '%"+ req.body.searchId +"%' AND produce_name LIKE '%"+ req.body.searchName +"%' AND produce_type LIKE '%"+ req.body.searchType +"%' AND produce_data LIKE '%"+ req.body.searchData +"%'"
@@ -222,33 +222,6 @@ router.post('/search', async (req, res) => {
         if (strResult != "[]") {
             console.log(strResult)
             res.json(strResult);
-            // sql = "SELECT level FROM user WHERE username = '"+ req.body.checkUser +"' AND password = '"+ req.body.checkPass +"'"
-            // con.query(sql, function (err, result) {
-            //     if (err) return console.log(err);
-            //     var strResult = JSON.stringify(result)
-            //     var strResult2 = JSON.parse(JSON.stringify(result))
-            //     // console.log(result)
-            //     // console.log(typeof(strResult),strResult)
-            //     if (strResult == "[]") {
-            //         console.log("รหัสผ่านผิด");
-            //         var checked ={
-            //             checkedUser: true,
-            //             checkedPass: false
-            //         };
-            //         console.log(checked);
-            //         res.json(checked);
-            //     } else {
-            //         console.log('รหัสผ่านถูก');
-            //         console.log(strResult2)
-            //         var checked ={
-            //             checkedUser: true,
-            //             checkedPass: true,
-            //             checkedLevel: strResult2
-            //         };
-            //         console.log(checked);
-            //         res.json(checked);
-            //     }
-            // })
         } else {
             console.log(strResult)
             var queryData ={
@@ -258,5 +231,23 @@ router.post('/search', async (req, res) => {
         }
     })
 });
+
+router.post('/deleteproduce', async (req, res) => {
+    console.log(req.body.delId)
+    sql = "DELETE FROM tb_produce WHERE produce_id = '"+ req.body.delId +"'"
+    con.query(sql, function (err, result) {
+        if (err) return console.log(err);
+        res.json(result);
+    })
+})
+
+router.post('/editproduce', async (req, res) => {
+    console.log(req.body)
+    // sql = "UPDATE tb_produce SET produce_id = '"+ req.body.editId +"', produce_name = '"+ req.body.editName +"', produce_type = '"+ req.body.editType +"', produce_data = '"+ req.body.editData +"' WHERE produce_id = '"+ req.body.delId +"'"
+    // con.query(sql, function (err, result) {
+    //     if (err) return console.log(err);
+    //     res.json(result);
+    // })
+})
 
 module.exports = router;
