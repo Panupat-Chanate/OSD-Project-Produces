@@ -41,9 +41,22 @@ export default function Signin() {
     });
   };
 
-  // const handleSelect = (e) => {
-  //   setFile(e.target.files[0]);
+  // const getSession=() => {
+  //   axios.get('/checkSession', {withCredentials: true})
+  //   .then(response => {
+  //     console.log(response.data)
+  //     if (response.data) {
+  //       browserHistory.push("/home");
+  //     } else {
+  //       browserHistory.push("/");
+  //     }
+  //   }).catch(error => {
+  //     console.log(error);
+  //   });
   // }
+  // // componentDidMount() {
+  //   this.getSession();
+  // // }
 
   return (
     <div align = "center">

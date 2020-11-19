@@ -9,9 +9,10 @@ export default function AddProduces() {
     const [Picture, setPicture] = useState('');
 
     const onSubmit = data => {
-      console.log(Picture)
+      console.log(file)
       const fd = new FormData();
-      fd.append("Image", file);
+      fd.append("Image", Picture);
+      fd.append("File", file);
       fd.append("ProduceId", data.ProduceId);
       fd.append("ProduceName", data.ProduceName);
       fd.append("ProduceType", data.ProduceType);
@@ -81,8 +82,6 @@ export default function AddProduces() {
       <p></p>
       <input type="file" name="file" id="file" ref={register} onChange={handleFile} />
       <p></p>
-      {/* <input type="file" name="file" id="file" ref={register} onChange={handleSelect} />
-      <p></p> */}
       <input type="submit" className="btn btn-primary" value="เพิ่มข้อมูลผลิตภัณฑ์"/>
     </form>
     <p></p>

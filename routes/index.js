@@ -112,9 +112,9 @@ router.post('/checksignin', async (req, res) => {
 
 router.post('/addProduce', async (req, res) => {
     const storage = multer.diskStorage({
-        destination: "./public/upload/",
+        destination: "D:/OSD/demo/client/public/image",
         filename: function(req, file, cb){
-           cb(null,"IMAGE-" + Date.now() + path.extname(file.originalname));
+           cb(null,"PRODUCE-" + Date.now() + path.extname(file.originalname));
         }
      });
        
@@ -125,38 +125,39 @@ router.post('/addProduce', async (req, res) => {
 
     upload(req, res, (err) => {
         const objData = JSON.parse(JSON.stringify(req.body));
-        console.log(objData);
+        // console.log(objData);
         console.log("Request file --->", req.file);
         if (req.body) {
-            res.redirect('/')
-            var img = fs.readFileSync(req.file.path);
-            var encode_image = img.toString('base64');
-            
-            var saveImg = {img: {
-                contentType: req.file.mimetype,
-                image: Buffer.from(encode_image, 'base64')
-            }}
-            console.log(saveImg)
-            sql = "INSERT INTO tb_produce (produce_id, produce_name, produce_type, produce_data, produce_img) VALUES('"+ objData.ProduceId +"', '"+ objData.ProduceName +"','"+ objData.ProduceType +"','"+ objData.ProduceData +"', '"+ saveImg +"')"
+            // console.log(req.file.filename)
+            sql = "INSERT INTO tb_produce (produce_id, produce_name, produce_type, produce_data, produce_img) VALUES('"+ objData.ProduceId +"', '"+ objData.ProduceName +"','"+ objData.ProduceType +"','"+ objData.ProduceData +"', '"+ req.file.filename +"')"
             con.query(sql, function (err, result) {
                 if (err) throw err;
-                // res.json(result);
+                res.json(result);
             })
         }
     })   
 });
 
-router.get('/showProduce', async (req, res) => {
-    sql = "SELECT produce_id, produce_name, produce_type, produce_data FROM tb_produce"
+router.get('/showProduce/:Id', async (req, res) => {
+    sql = "SELECT produce_img FROM tb_produce WHERE produce_id = '"+req.params.Id+"'"
     con.query(sql, function (err, result) {
-        if (err) return console.log(err);
-        var strResult = JSON.parse(JSON.stringify(result))
-        // var strResult = JSON.stringify(result)
-        console.log(result)
-        console.log(strResult)
-        res.json(strResult);
+        if (err) return console.log(err)
+        console.log(result);
+        res.contentType('image/jpeg');
+        res.send(result.produce_img)
     })
 });
+
+router.get("/icon/:id", (req, res) => {
+    const id = req.params.id
+    fs.readFile(`./public/upload/${id}.jpg`, function (err, data) {
+        if (err) throw err
+        else {
+            res.writeHead(200, { "Content-Type": "image/jpeg" })
+            res.end(data)
+        }
+    })
+})
 
 router.post('/search', async (req, res) => {
     console.log(req.body)

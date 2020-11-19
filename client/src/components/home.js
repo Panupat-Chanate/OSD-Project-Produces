@@ -1,8 +1,9 @@
-import React,{Component, useCallback} from 'react';
+import React,{Component, useState} from 'react';
 import axios from 'axios';
 import Add from './add';
 import { browserHistory } from 'react-router';
 import Session from './session'
+const fs = require('fs');
 
 export default class Home extends Component{
   constructor() {
@@ -13,6 +14,7 @@ export default class Home extends Component{
       searchName: '',
       searchType: '',
       searchData: '',
+      _img: '',
       arrayData: [],
       editItem: false,
       originAll: {
@@ -21,8 +23,7 @@ export default class Home extends Component{
         originName: '',
         originType: '',
         originData: ''
-      },
-      pic: ''
+      }
     }
   }
 
@@ -63,19 +64,7 @@ export default class Home extends Component{
           originData: this.state.searchData
         }
       })
-      // console.log(this.state.arrayData[0].produce_img.data)
-      // let base64String = btoa(String.fromCharCode(...new Uint8Array(this.state.arrayData[0].produce_img.data)));
-      // console.log(base64String)
-      // var arrayBufferView = new Uint8Array(this.state.arrayData[0].produce_img.data);
-      // var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
-      // var urlCreator = window.URL || window.webkitURL;
-      // var imageUrl = urlCreator.createObjectURL( blob );
-      // var img = document.querySelector( "#photo" );
-      // img.src = imageUrl;
-      // console.log(arrayBufferView)
-      // this.setState({
-      //   pic: this.domSanitizer.bypassSecurityTrustUrl('data:image/jpg;base64,  '+ base64String),
-      // })
+      // console.log(this.state.arrayData[20].produce_img)
     }).catch((error) => {
       console.log(error)
     });
@@ -106,7 +95,8 @@ export default class Home extends Component{
       searchId: Item.item_id,
       searchName: Item.item_name,
       searchType: Item.item_type,
-      searchData: Item.item_data
+      searchData: Item.item_data,
+      _img: Item.item_img
     });
   }
   afterEdit=(e)=>{
@@ -137,9 +127,11 @@ export default class Home extends Component{
     return(
     <form>
       <div align="right">
-        <input type="text" name="searchId" id="searchId" value={this.state.searchId} onChange={this.handleChange} placeholder="ID"></input> &nbsp;&nbsp;
-        <input type="text" name="searchName" id="searchName" value={this.state.searchName} onChange={this.handleChange} placeholder="Name"></input> &nbsp;&nbsp;
-        <input type="text" name="searchType" id="searchType" value={this.state.searchType} onChange={this.handleChange} placeholder="Type"></input> &nbsp;&nbsp;
+        {/* <img src={'D:/UploadIMG/'+ this.state._img} alt="" width="50" height="60"/>
+        <input type="file" name="picture" id="picture"/> <p></p> */}
+        <input type="text" name="searchId" id="searchId" value={this.state.searchId} onChange={this.handleChange} placeholder="ID"></input> <p></p>
+        <input type="text" name="searchName" id="searchName" value={this.state.searchName} onChange={this.handleChange} placeholder="Name"></input> <p></p>
+        <input type="text" name="searchType" id="searchType" value={this.state.searchType} onChange={this.handleChange} placeholder="Type"></input> <p></p>
         <input type="text" name="searchData" id="searchData" value={this.state.searchData} onChange={this.handleChange} placeholder="Data"></input> <p></p>
         <input type="submit" className="btn btn-primary" value={this.state.editItem?"บันทึก":"ค้นหา"} className={this.state.editItem?"btn btn-danger":"btn btn-primary"}
           onClick={this.state.editItem?this.afterEdit:this.handleSubmit}/>
@@ -154,6 +146,7 @@ export default class Home extends Component{
               <th>Name</th>
               <th>Type</th>
               <th>Data</th>
+              <th>Download</th>
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -161,14 +154,16 @@ export default class Home extends Component{
           <tbody>
           {this.state.arrayData.map((item, index) => (
             <tr key={index}>
-              <td align="center"><img id='photo' alt="" width="50" height="60"/></td>
+              {/* src="/image/IMAGE-1605751886206.jpg" */}
+              <td align="center"><img src={'/image/'+ item.produce_img} alt="" width="50" height="60"/></td>
               <td>{item.produce_id}</td>
               <td>{item.produce_name}</td>
               <td>{item.produce_type}</td>
               <td>{item.produce_data}</td>
+              <td></td>
               <td align="center" className="text-primary">
                 <i class="fas fa-edit" onClick={this.beforeEdit} id={
-                  '{ "_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
+                  '{ "_img":"'+item.produce_img+'","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
                 }></i>
               </td>
               <td align="center" className="text-danger">

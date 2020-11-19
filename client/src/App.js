@@ -111,7 +111,7 @@ export default function PersistentDrawerLeft() {
       if (response.data[0].leve === 0) {
         browserHistory.push("/userhome");
       } else {
-        browserHistory.push("/user");
+        browserHistory.push("/home");
       }
     }).catch(error => {
       console.log(error);
