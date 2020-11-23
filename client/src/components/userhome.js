@@ -75,24 +75,26 @@ export default class Userhome extends Component{
       </div>
       <p></p>
       <div>
-        <table class="table table-bordered">
+        <table className="table table-bordered">
           <thead>
-            <tr>
+            <tr align="center">
               <th>Image</th>
               <th>ID</th>
               <th>Name</th>
               <th>Type</th>
               <th>Data</th>
+              <th>Download</th>
             </tr>
           </thead>
           <tbody>
           {this.state.arrayData.map((item, index) => (
             <tr key={index}>
-              <td align="center"><img id='photo' alt="" width="50" height="60"/></td>
+              <td align="center"><img src={'/image/'+ item.produce_img} alt="" width="50" height="60"/></td>
               <td>{item.produce_id}</td>
               <td>{item.produce_name}</td>
               <td>{item.produce_type}</td>
               <td>{item.produce_data}</td>
+              <td></td>
             </tr>
             ))}
           </tbody>

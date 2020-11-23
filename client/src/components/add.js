@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
-import Home from './home';
 
 export default function AddProduces() {
     const { register, handleSubmit, setValue, errors } = useForm();
@@ -43,10 +42,6 @@ export default function AddProduces() {
   return (
     <div>
     <form onSubmit={handleSubmit(onSubmit)} align = "center">
-      <input type="file" name="picture" id="picture" ref={register({required: "อัพโหลดรูปโปรไฟล์"})} onChange={handlePicture} />
-      <p></p>
-      <span >{errors.picture?.message}</span>
-      <p></p>
       <input type="text" name="ProduceName" ref={register
         ({
         required: "กรุณากรอกชื่อผลิตภัณฑ์"
@@ -80,12 +75,15 @@ export default function AddProduces() {
       <p></p>
       <span >{errors.ProduceData?.message}</span>
       <p></p>
+      <input type="file" name="picture" id="picture" ref={register({required: "อัพโหลดรูปโปรไฟล์"})} onChange={handlePicture} />
+      <p></p>
+      <span >{errors.picture?.message}</span>
+      <p></p>
       <input type="file" name="file" id="file" ref={register} onChange={handleFile} />
       <p></p>
       <input type="submit" className="btn btn-primary" value="เพิ่มข้อมูลผลิตภัณฑ์"/>
     </form>
     <p></p>
-    {/* <Home></Home> */}
     </div>
   );
 }

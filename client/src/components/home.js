@@ -1,9 +1,7 @@
 import React,{Component, useState} from 'react';
 import axios from 'axios';
-import Add from './add';
 import { browserHistory } from 'react-router';
 import Session from './session'
-const fs = require('fs');
 
 export default class Home extends Component{
   constructor() {
@@ -15,6 +13,12 @@ export default class Home extends Component{
       searchType: '',
       searchData: '',
       _img: '',
+
+      popupName: '',
+      popupId: '',
+      popupType: '',
+      popupData: '',
+
       arrayData: [],
       editItem: false,
       originAll: {
@@ -46,7 +50,6 @@ export default class Home extends Component{
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(this.state)
     axios.post("/search",this.state)
     .then((response) => {
       this.setState({
@@ -96,7 +99,7 @@ export default class Home extends Component{
       searchName: Item.item_name,
       searchType: Item.item_type,
       searchData: Item.item_data,
-      _img: Item.item_img
+      _img: Item._img
     });
   }
   afterEdit=(e)=>{
@@ -115,7 +118,8 @@ export default class Home extends Component{
         searchId: this.state.originAll.originId,
         searchName: this.state.originAll.originName,
         searchType: this.state.originAll.originType,
-        searchData: this.state.originAll.originData
+        searchData: this.state.originAll.originData,
+        _img: ''
       })
       this.handleSubmit(e);
     }).catch((error) => {
@@ -123,24 +127,64 @@ export default class Home extends Component{
     });
   }
 
+  popup=(e)=>{
+    const Item = JSON.parse(e.target.id)
+    this.setState({
+      _img: Item._img,
+      popupId: Item.item_id,
+      popupName: Item.item_name,
+      popupType: Item.item_type,
+      popupData: Item.item_data,
+    });
+  }
+
+  cancle=(e)=>{
+    e.preventDefault();
+    this.setState({
+      editItem: false,
+      searchId: this.state.originAll.originId,
+      searchName: this.state.originAll.originName,
+      searchType: this.state.originAll.originType,
+      searchData: this.state.originAll.originData,
+      // _img: ''
+    });
+  }
+
+  clear=(e)=>{
+    e.preventDefault();
+    this.setState({
+      editItem: false,
+      searchId: "",
+      searchName: "",
+      searchType: "",
+      searchData: "",
+      _img: ''
+    });
+  }
+
   render(){
     return(
     <form>
       <div align="right">
-        {/* <img src={'D:/UploadIMG/'+ this.state._img} alt="" width="50" height="60"/>
-        <input type="file" name="picture" id="picture"/> <p></p> */}
-        <input type="text" name="searchId" id="searchId" value={this.state.searchId} onChange={this.handleChange} placeholder="ID"></input> <p></p>
+        <img src={'/image/'+ this.state._img} hidden={this.state.editItem?false:true} alt="" width="50" height="60"/> &nbsp;&nbsp;
+        <img src={'/image/'+ this.state._img} hidden={this.state.editItem?false:true} alt="" width="50" height="60"/> &nbsp;&nbsp;
+        <img src={'/image/'+ this.state._img} hidden={this.state.editItem?false:true} alt="" width="50" height="60"/> <p></p>
+        <input type="file" name="picture" id="picture" hidden={this.state.editItem?false:true}/> <p></p>
+        <input type="text" name="searchId" id="searchId" value={this.state.searchId} onChange={this.handleChange} placeholder="ID"></input> &nbsp;&nbsp;
         <input type="text" name="searchName" id="searchName" value={this.state.searchName} onChange={this.handleChange} placeholder="Name"></input> <p></p>
-        <input type="text" name="searchType" id="searchType" value={this.state.searchType} onChange={this.handleChange} placeholder="Type"></input> <p></p>
+        <input type="text" name="searchType" id="searchType" value={this.state.searchType} onChange={this.handleChange} placeholder="Type"></input> &nbsp;&nbsp;
         <input type="text" name="searchData" id="searchData" value={this.state.searchData} onChange={this.handleChange} placeholder="Data"></input> <p></p>
-        <input type="submit" className="btn btn-primary" value={this.state.editItem?"บันทึก":"ค้นหา"} className={this.state.editItem?"btn btn-danger":"btn btn-primary"}
+        <input type="button" value="ยกเลิก" className="btn btn-danger" disabled={!this.state.editItem}
+          onClick={this.cancle}/> &nbsp;&nbsp;
+        <input type="button" className="btn btn-warning text-light" value="ล้างข้อมูล" onClick={this.clear}></input> &nbsp;&nbsp;
+        <input type="submit" value={this.state.editItem?"บันทึก":"ค้นหา"} className={this.state.editItem?"btn btn-success":"btn btn-primary"}
           onClick={this.state.editItem?this.afterEdit:this.handleSubmit}/>
       </div>
       <p></p>
       <div>
         <table class="table table-bordered">
           <thead>
-            <tr>
+            <tr align="center">
               <th>Image</th>
               <th>ID</th>
               <th>Name</th>
@@ -154,13 +198,14 @@ export default class Home extends Component{
           <tbody>
           {this.state.arrayData.map((item, index) => (
             <tr key={index}>
-              {/* src="/image/IMAGE-1605751886206.jpg" */}
-              <td align="center"><img src={'/image/'+ item.produce_img} alt="" width="50" height="60"/></td>
+              <td align="center"><img src={'/image/'+ item.produce_img} alt="" width="50" height="60" data-toggle="modal" data-target="#exampleModalCenter" onClick={this.popup} id={
+                  '{ "_img":"'+item.produce_img+'","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
+              }/></td>
               <td>{item.produce_id}</td>
               <td>{item.produce_name}</td>
               <td>{item.produce_type}</td>
               <td>{item.produce_data}</td>
-              <td></td>
+              <td align="center" className="text"><i class="fas fa-file-download"></i></td>
               <td align="center" className="text-primary">
                 <i class="fas fa-edit" onClick={this.beforeEdit} id={
                   '{ "_img":"'+item.produce_img+'","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
@@ -173,6 +218,30 @@ export default class Home extends Component{
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal-content">
+            {/* <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLongTitle">{"Name: "+this.state.popupName}</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div> */}
+            <div className="modal-body" align="center">
+              <button type="button" className="btn"><i class="fas fa-angle-double-left"></i></button> &nbsp;
+              <img src={'/image/'+ this.state._img} alt="" width="290" height="310"/> &nbsp;
+              <button type="button" className="btn"><i class="fas fa-angle-double-right"></i></button> &nbsp;
+            </div>
+            {/* <div className="modal-footer">
+              <h5 className="modal-body" id="exampleModalLongTitle">{"ID: "+this.state.popupId}</h5>
+              <h5 className="modal-body" id="exampleModalLongTitle">{"Name: "+this.state.popupName}</h5>
+              <h5 className="modal-body" id="exampleModalLongTitle">{"Type: "+this.state.popupType}</h5>
+              <h5 className="modal-body" id="exampleModalLongTitle">{"Data: "+this.state.popupData}</h5>
+            </div> */}
+          </div>
+        </div>
       </div>
     </form>
     )

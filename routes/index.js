@@ -49,15 +49,31 @@ router.post('/check', async (req, res) => {
 });
 
 router.post('/upload', async (req, res) => {
-    console.log(req.data);
-    if (req.body) {
-        res.redirect('/')
-        sql = "INSERT INTO user (username, password, img_profile) VALUES('"+ objData.username +"', '"+ objData.password +"', '"+ saveImg +"')"
-        con.query(sql, function (err, result) {
-            if (err) throw err;
-            // res.json(result);
-        })
-    } 
+    const storage = multer.diskStorage({
+        destination: "D:/OSD/demo/client/public/image",
+        filename: function(req, file, cb){
+           cb(null,"PRODUCE-" + Date.now() + path.extname(file.originalname));
+        }
+     });
+
+     const upload = multer({
+        storage: storage,
+        // limits:{fileSize: 1000000},
+     }).single("Image");
+
+    upload(req, res, (err) => {
+        const objData = JSON.parse(JSON.stringify(req.body));
+        console.log(objData);
+        console.log("Request file --->", req.file);
+        // if (req.body) {
+        //     console.log(req.file.filename)
+        //     sql = "INSERT INTO tb_produce (produce_id, produce_name, produce_type, produce_data, produce_img) VALUES('"+ objData.ProduceId +"', '"+ objData.ProduceName +"','"+ objData.ProduceType +"','"+ objData.ProduceData +"', '"+ req.file.filename +"')"
+        //     con.query(sql, function (err, result) {
+        //         if (err) throw err;
+        //         res.json(true);
+        //     })
+        // }
+    })   
 });
 
 router.post('/checksignin', async (req, res) => {
@@ -117,7 +133,7 @@ router.post('/addProduce', async (req, res) => {
            cb(null,"PRODUCE-" + Date.now() + path.extname(file.originalname));
         }
      });
-       
+
      const upload = multer({
         storage: storage,
         // limits:{fileSize: 1000000},
@@ -125,14 +141,15 @@ router.post('/addProduce', async (req, res) => {
 
     upload(req, res, (err) => {
         const objData = JSON.parse(JSON.stringify(req.body));
-        // console.log(objData);
+        console.log(objData);
         console.log("Request file --->", req.file);
         if (req.body) {
-            // console.log(req.file.filename)
+            // const jsonImg = '{ "image1":"'++'","image2":"'++'" }'
+            console.log(req.file.filename)
             sql = "INSERT INTO tb_produce (produce_id, produce_name, produce_type, produce_data, produce_img) VALUES('"+ objData.ProduceId +"', '"+ objData.ProduceName +"','"+ objData.ProduceType +"','"+ objData.ProduceData +"', '"+ req.file.filename +"')"
             con.query(sql, function (err, result) {
                 if (err) throw err;
-                res.json(result);
+                res.json(true);
             })
         }
     })   

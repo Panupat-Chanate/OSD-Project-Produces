@@ -41,7 +41,7 @@ export default function Signin() {
     });
   };
 
-  // const getSession=() => {
+  // const getSession = () => {
   //   axios.get('/checkSession', {withCredentials: true})
   //   .then(response => {
   //     console.log(response.data)
@@ -54,10 +54,10 @@ export default function Signin() {
   //     console.log(error);
   //   });
   // }
-  // // componentDidMount() {
-  //   this.getSession();
-  // // }
-
+  // componentDidMount() {
+    // this.getSession();
+  // }
+  // {getSession()}
   return (
     <div align = "center">
     <form onSubmit={handleSubmit(onSubmit)}>

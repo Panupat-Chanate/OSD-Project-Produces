@@ -175,6 +175,12 @@ export default function PersistentDrawerLeft() {
               <ListItemText primary={text} />
             </ListItem>
           ))}
+          {['เพิ่มข้อมูลผลิตภัณฑ์'].map((text, index) => (
+            <ListItem button key={text} component="a" href="/addproduce" hidden={false}>
+              <ListItemIcon>{<i class="fas fa-plus-circle"></i>}</ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
         </List>
         <Divider />
         <List>
