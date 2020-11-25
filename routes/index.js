@@ -245,19 +245,21 @@ router.post('/search', async (req, res) => {
     con.query(sql, function (err, result) {
         // console.log(result)
         if (err) return console.log(err);
+        const resJson= [];
+
         var strResult = JSON.parse(JSON.stringify(result))
         if (strResult != "[]") {
-            console.log(strResult[0].produce_img)
-            const Item = JSON.parse('{'+strResult[1].produce_img+'}')
-            console.log(Item.length)
-            var resJson = {
-                _id: strResult._id,
-                produce_id: strResult[1].produce_id,
-                produce_name: strResult[1].produce_name,
-                produce_type: strResult[1].produce_type,
-                produce_data: strResult[1].produce_data,
-                produce_img: Item
+            for (var i = 0; i < strResult.length; i++) {
+                resJson.push({
+                    _id: strResult[i]._id,
+                    produce_id: strResult[i].produce_id,
+                    produce_name: strResult[i].produce_name,
+                    produce_type: strResult[i].produce_type,
+                    produce_data: strResult[i].produce_data,
+                    produce_img: JSON.parse('{'+strResult[i].produce_img+'}')
+                })
             }
+            console.log(resJson)
             res.json(resJson);
         } else {
             console.log(strResult)

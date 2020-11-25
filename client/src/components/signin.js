@@ -21,7 +21,7 @@ export default function Signin() {
         if (checkedPass === true) {
           var checkedLevel = response.data.checkedLevel[0].level
           if (checkedLevel === 1) {
-            browserHistory.push("/home");
+            browserHistory.push("/homepop");
           } else {
             browserHistory.push("/userhome");
           }

@@ -12,7 +12,7 @@ export default class Homepopup extends Component{
       searchName: '',
       searchType: '',
       searchData: '',
-      _img: '',
+      _img: [],
 
       popupName: '',
       popupId: '',
@@ -50,12 +50,6 @@ export default class Homepopup extends Component{
         arrayData: []
       })
       var concatData = this.state.arrayData.concat(response.data);
-      // var json = '{'+response.data[0].produce_img+'}'
-      // const Item = JSON.parse('{'+response.data[0].produce_img+'}')
-    //'{"jsonIMG1":"PRODUCE-1606125496701.jpg","jsonIMG2":"PRODUCE-1606125496705.jpg"}'
-    // { "jsonIMG0":"PRODUCE-1606140295644.jpg"},{ "jsonIMG1":"PRODUCE-1606140295647.jpg"}
-    // "jsonIMG0":"PRODUCE-1606181601543.jpg","jsonIMG1":"PRODUCE-1606181601546.jpg"
-      // console.log('{'+response.data[0].produce_img+'}')
       console.log(concatData)
       this.setState({
         arrayData: concatData
@@ -109,6 +103,7 @@ export default class Homepopup extends Component{
 
   popup=(e)=>{
     const Item = JSON.parse(e.target.id)
+    console.log(e.target.id)
     this.setState({
       _id: Item._id,
       _img: Item._img,
@@ -117,6 +112,7 @@ export default class Homepopup extends Component{
       popupType: Item.item_type,
       popupData: Item.item_data,
     });
+    console.log(this.state.arrayData[0].produce_img.jsonIMG0)
   }
 
   clear=(e)=>{
@@ -174,7 +170,7 @@ export default class Homepopup extends Component{
           {this.state.arrayData.map((item, index) => (
             <tr key={index}>
               <td align="center"><img src={'/image/' + item.produce_img.jsonIMG0} alt="" width="50" height="60" data-toggle="modal" data-target="#exampleModalCenter" onClick={this.popup} id={
-                  '{ "_img":"'+item.produce_img+'","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
+                  '{ "_img":"'+item.produce_img.jsonIMG0+'","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
               }/></td>
               <td>{item.produce_id}</td>
               <td>{item.produce_name}</td>
@@ -183,7 +179,7 @@ export default class Homepopup extends Component{
               <td align="center" className="text"><i class="fas fa-file-download"></i></td>
               <td align="center" className="text-primary">
                 <i class="fas fa-edit" data-toggle="modal" data-target="#popupEdit" onClick={this.popup} id={
-                  '{ "_img":"'+item.produce_img+'","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
+                  '{ "_img":"{'+item.produce_img.jsonIMG0+','+item.produce_img.jsonIMG0+'}","_id":"'+item._id+'", "item_id":"'+item.produce_id+'", "item_name":"'+item.produce_name+'", "item_type":"'+item.produce_type+'", "item_data":"'+item.produce_data+'"}'
                 }></i>
               </td>
               <td align="center" className="text-danger">
@@ -233,8 +229,8 @@ export default class Homepopup extends Component{
               <img src={'/image/'+ this.state._img} alt="" width="290" height="310"/> &nbsp;
               <button type="button" className="btn"><i class="fas fa-angle-double-right"></i></button> &nbsp; */}
                 
-                <img src={'/image/'+ this.state._img} alt="" width="150" height="170"></img>
-                <img src={'/image/'+ this.state._img} alt="" width="150" height="170"/>
+                <img src={'/image/' + this.state._img.jsonIMG0} alt="" width="150" height="170"/>
+                <img src={'/image/'+ this.state._img.jsonIMG1} alt="" width="150" height="170"/>
                 <img src={'/image/'+ this.state._img} alt="" width="150" height="170"/> <p></p>
                 {/* <img src={this.state.preview} alt="" width="100" height="120"/> &nbsp;&nbsp;
                 <input type="file" name="preview" id="preview" onChange={this.handleUpload}/> <p></p> */}
