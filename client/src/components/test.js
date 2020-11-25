@@ -1,79 +1,50 @@
-// import React from 'react';
-// //bootstrap
-// //for image saving request call
-// import axios from 'axios';
-// //image upload reactjs npm module
-// import ImageUploading from "react-images-uploading";
-// // { ImageUploadingPropsType, ImageListType, ImageType } is type for typescript
-// //image uploading limit
-// const maxNumber = 3;
-// class App extends React.Component {
-//   onChange = (imageList) => {
-//     // data for submit
-//     //Getting total number of images
-//     var images = imageList.length
-//     // Create an object of formData 
-//     const formData = new FormData(); 
- 
-//      //Saving multiple images in formadta varibale
-//      for(var a = 0; a<images; a++)
-//      {
-//       formData.append( 
-//         "myFile"+a, 
-//         imageList[a].file, 
-//         imageList[a].file.name
-//       ); 
-      
-//      }
-//     // Update the formData object 
-    
-   
-//     // Details of the uploaded file 
-   
-   
-//     // Request made to the backend api 
-//     // Send formData object 
-//     axios.post("http://localhost/reactimageupload.php", formData); 
-//   }; 
-   
-  
-  
-//   render() {
-   
-//     return (
-      
-//       <div className="maincontainer">
-       
-//         <h1 className="mr-5 ml-5 mt-5">Therichpost.com</h1>
-//         <div className="container mb-5 mt-5">
-        
-//         <ImageUploading
-//         onChange={this.onChange}
-//         maxNumber={maxNumber}
-//         multiple
-//       >
-//         {({ imageList, onImageUpload }) => (
-//           // write your building UI
-//           <div className="imageuploader">
-//             <div className="mainBtns">
-//             <button className="btn btn-primary mr-1" onClick={onImageUpload}>Upload Image</button>
-            
-//             </div>
-//             {imageList.map((image) => (
-//               <div className="imagecontainer" key={image.key}>
-//                 <img src={image.dataURL} />
-                
-//               </div>
-//             ))}
-//           </div>
-//         )}
-//       </ImageUploading>
-        
-            
-//       </div>
-     
-//       </div>
-// )
-// };
-// }
-// export default App;
+import React, { Component } from 'react';
+import axios from 'axios';
+
+export default class FilesUploadComponent extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.onFileChange = this.onFileChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+
+        this.state = {
+          imgCollection: ''
+        }
+    }
+
+    onFileChange(e) {
+        this.setState({ imgCollection: e.target.files })
+    }
+
+    onSubmit(e) {
+        e.preventDefault()
+
+        var formData = new FormData();
+        for (const key of Object.keys(this.state.imgCollection)) {
+            formData.append('imgCollection', this.state.imgCollection[key])
+        }
+        axios.post("/upload", formData, {
+        }).then(res => {
+            console.log(res.data)
+        })
+    }
+
+    render() {
+        return (
+            <div className="container">
+                <div className="row">
+                    <form onSubmit={this.onSubmit}>
+                        <div className="form-group">
+                            <input type="file" name="imgCollection" onChange={this.onFileChange} multiple />
+                        </div>
+                        <div className="form-group">
+                            <button className="btn btn-primary" type="submit">Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        )
+    }
+}

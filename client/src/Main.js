@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import Signin from './components/signin';
 import Signup from './components/signup';
-import AddProduce from './components/add';
+import AddProduce from './components/addproduce';
 import Home from './components/home';
 import Userhome from './components/userhome';
+import Homepopup from './components/homepopup';
 import Test from './components/test';
 import {Router,Route,Link,browserHistory, Switch} from 'react-router';
 
@@ -15,6 +16,7 @@ export default class App extends Component{
           <Route path="/" component={Signin}></Route>
           <Route path="/signup" component={Signup}></Route>
           <Route path="/home" component={Home}></Route>
+          <Route path="/homepop" component={Homepopup}></Route>
           <Route path="/userhome" component={Userhome}></Route>
           <Route path="/addproduce" component={AddProduce}></Route>
           <Route path="/Test" component={Test}></Route>

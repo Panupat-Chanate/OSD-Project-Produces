@@ -19,6 +19,8 @@
     "react-crud-table": "0.0.8",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.2",
+    "react-images-uploading": "^3.1.2",
+    "react-multiple-image-input": "^1.0.0",
     "react-router": "^3.2.6",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",

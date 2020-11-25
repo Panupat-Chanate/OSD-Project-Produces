@@ -3,50 +3,33 @@ import axios from 'axios';
 import { browserHistory } from 'react-router';
 
 export default class Home extends Component{
-  constructor() {
-    super();
-    this.state={
-      file: [],
-      image: [],
-      name: ''
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgCollection: '',
+      produceId: '',
+      produceName: '',
+      produceType: '',
+      produceData: ''
     }
-  }
-
-//   getSession=() => {
-//     axios.get('/checkSession', {withCredentials: true})
-//     .then(response => {
-//       console.log(response.data)
-//       if (response.data) {
-//       } else {
-//         browserHistory.push("/");
-//       }
-//     }).catch(error => {
-//       console.log(error);
-//     });
-//   }
-
-//   componentDidMount() {
-//     this.getSession();
-//   }
+    this.handleUpload = this.handleUpload.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+}
 
   handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(this.state)
-    const fd = new FormData();
-    fd.append("Image", this.state.image);
-    fd.append("File", this.state.file);
-    fd.append("Name", this.state.name);
-    const config = {
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
-    };
-    axios.post("/upload",{
-      file:this.state.file,
-      img:this.state.image
-    })
+    e.preventDefault()
+    const formData = new FormData();
+    for (const key of Object.keys(this.state.imgCollection)) {
+      formData.append('imgCollection', this.state.imgCollection[key])
+    }
+    formData.append('produceId', this.state.produceId)
+    formData.append('produceName', this.state.produceName)
+    formData.append('produceType', this.state.produceType)
+    formData.append('produceData', this.state.produceData)
+    axios.post("/upload",formData)
     .then((response) => {
-
+      console.log(response.data)
     }).catch((error) => {
       console.log(error)
     });
@@ -58,20 +41,22 @@ export default class Home extends Component{
     });
   }
 
-  handleFile=(e)=>{
+  handleUpload=(e)=>{
     this.setState({
-        [e.target.id]: e.target.files[0]
+        [e.target.id]: e.target.files
     });
-    //   console.log(e.target.files[0])
   }
 
   render(){
     return(
     <form>
-      <input type="file" id="image" name="image" onChange={this.handleFile}></input>
-      <input type="file" id="file" name="file" onChange={this.handleFile}></input>
-      <input type="text" id="name" onChange={this.handleChange}></input>
-      <input type="submit" onClick={this.handleSubmit}></input>
+      <input type="file" id="imgCollection" name="imgCollection" onChange={this.handleUpload} multiple></input><p></p>
+      {/* <input type="file" id="file" name="file" onChange={this.handleFile}></input> */}
+      <input type="text" id="produceId" placeholder="รหัสผลิตภัณฑ์" onChange={this.handleChange}></input><p></p>
+      <input type="text" id="produceName" placeholder="ชื่อผลิตภัณฑ์" onChange={this.handleChange}></input><p></p>
+      <input type="text" id="produceType" placeholder="ประเภทผลิตภัณฑ์" onChange={this.handleChange}></input><p></p>
+      <input type="text" id="produceData"  placeholder="ข้อมูลผลิตภัณฑ์" onChange={this.handleChange}></input><p></p>
+      <input type="submit" className="btn btn-primary" onClick={this.handleSubmit} value="เพิ่มข้อมูลผลิตภัณฑ์"></input><p></p>
     </form>
     )
   }

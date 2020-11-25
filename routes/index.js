@@ -19,6 +19,17 @@ con.connect(function(err) {
     console.log("MySQL Connected");
 });
 
+const storage = multer.diskStorage({
+    destination: "D:/OSD/demo/client/public/image",
+    filename: function(req, file, cb){
+       cb(null,"PRODUCE-" + Date.now() + path.extname(file.originalname));
+    }
+ });
+const upload = multer({
+    storage: storage,
+// limits:{fileSize: 1000000},
+})
+
 router.post('/check', async (req, res) => {
     console.log(req.body)
     sql = "SELECT username FROM user WHERE username = '"+ req.body.UserName +"'"
@@ -48,32 +59,24 @@ router.post('/check', async (req, res) => {
     })
 });
 
-router.post('/upload', async (req, res) => {
-    const storage = multer.diskStorage({
-        destination: "D:/OSD/demo/client/public/image",
-        filename: function(req, file, cb){
-           cb(null,"PRODUCE-" + Date.now() + path.extname(file.originalname));
-        }
-     });
+router.post('/upload', upload.array('imgCollection', 6), (req, res, next) => {
+    const jsonImg = [];
+    // const url = req.protocol + '://' + req.get('host')
+    for (var i = 0; i < req.files.length; i++) {
+        jsonImg.push('"jsonIMG'+i+'":"'+req.files[i].filename+'"')
+    }
 
-     const upload = multer({
-        storage: storage,
-        // limits:{fileSize: 1000000},
-     }).single("Image");
+    console.log(jsonImg)
+    const objData = JSON.parse(JSON.stringify(req.body));
+    console.log(objData);
 
-    upload(req, res, (err) => {
-        const objData = JSON.parse(JSON.stringify(req.body));
-        console.log(objData);
-        console.log("Request file --->", req.file);
-        // if (req.body) {
-        //     console.log(req.file.filename)
-        //     sql = "INSERT INTO tb_produce (produce_id, produce_name, produce_type, produce_data, produce_img) VALUES('"+ objData.ProduceId +"', '"+ objData.ProduceName +"','"+ objData.ProduceType +"','"+ objData.ProduceData +"', '"+ req.file.filename +"')"
-        //     con.query(sql, function (err, result) {
-        //         if (err) throw err;
-        //         res.json(true);
-        //     })
-        // }
-    })   
+    if (req.body) {
+        sql = "INSERT INTO tb_produce (produce_id, produce_name, produce_type, produce_data, produce_img) VALUES('"+ objData.produceId +"', '"+ objData.produceName +"','"+ objData.produceType +"','"+ objData.produceData +"', '"+ jsonImg +"')"
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            res.json(true);
+        })
+    }
 });
 
 router.post('/checksignin', async (req, res) => {
@@ -240,12 +243,22 @@ router.post('/search', async (req, res) => {
         sql+="WHERE produce_data LIKE '%"+ req.body.searchData +"%'"
     }
     con.query(sql, function (err, result) {
-        console.log(result)
+        // console.log(result)
         if (err) return console.log(err);
         var strResult = JSON.parse(JSON.stringify(result))
         if (strResult != "[]") {
-            console.log(strResult)
-            res.json(strResult);
+            console.log(strResult[0].produce_img)
+            const Item = JSON.parse('{'+strResult[1].produce_img+'}')
+            console.log(Item.length)
+            var resJson = {
+                _id: strResult._id,
+                produce_id: strResult[1].produce_id,
+                produce_name: strResult[1].produce_name,
+                produce_type: strResult[1].produce_type,
+                produce_data: strResult[1].produce_data,
+                produce_img: Item
+            }
+            res.json(resJson);
         } else {
             console.log(strResult)
             var queryData ={

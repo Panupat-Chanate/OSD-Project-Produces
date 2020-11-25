@@ -8,7 +8,7 @@ export default function AddProduces() {
     const [Picture, setPicture] = useState('');
 
     const onSubmit = data => {
-      console.log(file)
+      console.log(Picture)
       const fd = new FormData();
       fd.append("Image", Picture);
       fd.append("File", file);
@@ -34,7 +34,7 @@ export default function AddProduces() {
     };
 
     const handlePicture = (e) => {
-      setPicture(e.target.files[0]);
+      setPicture(e.target.files);
     }
     const handleFile = (e) => {
       setFile(e.target.files[0]);
@@ -75,12 +75,12 @@ export default function AddProduces() {
       <p></p>
       <span >{errors.ProduceData?.message}</span>
       <p></p>
-      <input type="file" name="picture" id="picture" ref={register({required: "อัพโหลดรูปโปรไฟล์"})} onChange={handlePicture} />
+      <input type="file" name="picture" id="picture" ref={register({required: "อัพโหลดรูปโปรไฟล์"})} onChange={handlePicture} multiple/>
       <p></p>
       <span >{errors.picture?.message}</span>
       <p></p>
-      <input type="file" name="file" id="file" ref={register} onChange={handleFile} />
-      <p></p>
+      {/* <input type="file" name="file" id="file" ref={register} onChange={handleFile} />
+      <p></p> */}
       <input type="submit" className="btn btn-primary" value="เพิ่มข้อมูลผลิตภัณฑ์"/>
     </form>
     <p></p>
